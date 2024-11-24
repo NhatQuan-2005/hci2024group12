@@ -198,8 +198,13 @@
           const { jsPDF } = window.jspdf;
           const doc = new jsPDF();
           doc.text("Báo cáo tình hình học tập", 10, 10);
-          doc.text(reportContent.textContent, 30, 20);
+
           doc.autoTable({ html: "#student-table" });
+
+          // Lấy tọa độ y của dòng cuối cùng của bảng
+          const finalY = doc.autoTable.previous.finalY;
+
+          doc.text(reportContent.textContent, 10, finalY + 10);
           doc.save("report.pdf");
         });
 
