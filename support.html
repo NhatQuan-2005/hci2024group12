@@ -14,20 +14,21 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            background: #f4f4f9;
+            background: #eef8f0;
             color: #333;
         }
 
+        /* Header Styles */
         header {
-            background: linear-gradient(90deg, #4CAF50, #3E8E41);
+            background: linear-gradient(90deg, #6EBF8B, #55996B);
             color: white;
-            padding: 10px;
+            padding: 10px 20px;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .header-nav {
@@ -36,44 +37,41 @@
             align-items: center;
         }
 
-        .header-nav button,
-        .header-nav input {
+        .header-nav button {
             margin: 0 5px;
-            padding: 10px 15px;
+            padding: 10px 20px;
             border: none;
-            background: #3e8e41;
+            background: #519975;
             color: white;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 50px;
             transition: all 0.3s ease;
+            font-size: 14px;
         }
 
         .header-nav button:hover {
-            background: #2e6c33;
+            background: #427F5B;
+            transform: scale(1.05);
         }
 
-        .header-nav input {
-            background: white;
-            color: #333;
-        }
-
+        /* Sidebar Styles */
         .sidebar {
             position: fixed;
-            top: 50px;
+            top: 60px;
             bottom: 0;
             right: 0;
             width: 250px;
-            background: linear-gradient(180deg, #4CAF50, #3E8E41);
+            background: linear-gradient(180deg, #6EBF8B, #55996B);
             color: white;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             overflow-y: auto;
-            transition: transform 0.3s ease-in-out;
         }
 
         .sidebar h2 {
             text-align: center;
-            border-bottom: 1px solid white;
+            font-size: 18px;
+            border-bottom: 2px solid white;
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
@@ -85,35 +83,40 @@
         }
 
         .sidebar ul li {
-            padding: 10px 15px;
+            padding: 12px 15px;
             cursor: pointer;
-            border-bottom: 1px solid #3e8e41;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border-radius: 10px;
+            text-align: center;
         }
 
         .sidebar ul li:hover {
-            background: #2e6c33;
+            background: rgba(255, 255, 255, 0.2);
             transform: translateX(-5px);
         }
 
         main {
-            margin: 70px 270px 20px 20px;
+            margin: 90px 270px 20px 20px;
+            transition: margin 0.3s ease;
         }
 
+        /* Feedback Form Styles */
         .form-container {
             background-color: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 1s ease;
         }
 
         .form-container h2 {
-            color: #4CAF50;
+            color: #427F5B;
             margin-bottom: 20px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
@@ -129,20 +132,17 @@
         }
 
         .btn-submit {
-            background: #4CAF50;
+            background: #6EBF8B;
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         .btn-submit:hover {
-            background: #3e8e41;
-        }
-
-        .feedback-container {
-            margin-top: 30px;
+            background: #427F5B;
         }
 
         .feedback-container table {
@@ -150,20 +150,28 @@
             border-collapse: collapse;
         }
 
-        .feedback-container th,
-        .feedback-container td {
+        .feedback-container th {
             padding: 10px;
-            border: 1px solid #ddd;
+            background-color: #427F5B;
+            color: white;
             text-align: left;
         }
 
-        .feedback-container th {
-            background-color: #4CAF50;
-            color: white;
+        .feedback-container td {
+            padding: 10px;
+            border: 1px solid #ddd;
         }
 
-        .feedback-container td {
-            background-color: #f9f9f9;
+        /* Custom Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -256,27 +264,16 @@
     <!-- AOS JS -->
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <script>
-        AOS.init(); // Initialize animations
+        AOS.init();
 
+        // Navigate to pages
         function navigateTo(page) {
             window.location.href = page;
         }
 
-        function logout() {
-            window.location.href = 'login.html';
-        }
-
+        // Submit feedback
         function submitFeedback() {
-            const category = document.getElementById('category').value;
-            const subject = document.getElementById('subject').value;
-            const content = document.getElementById('content').value;
-
-            if (category && subject && content) {
-                alert('Góp ý của bạn đã được gửi thành công!');
-                // You can add logic to submit the data to a server or database
-            } else {
-                alert('Vui lòng điền đầy đủ thông tin.');
-            }
+            alert("Góp ý đã được gửi thành công!");
         }
     </script>
 </body>
