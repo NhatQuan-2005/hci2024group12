@@ -16,7 +16,6 @@
             color: #333;
         }
 
-        /* Header Styles */
         header {
             background: linear-gradient(90deg, #6EBF8B, #55996B);
             color: white;
@@ -52,7 +51,6 @@
             transform: scale(1.05);
         }
 
-        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 60px;
@@ -94,10 +92,9 @@
             transform: translateX(-5px);
         }
 
-        /* Main Content Styles */
         main {
             margin: 80px 20px 20px 20px;
-            padding-right: 260px; /* Space for the sidebar */
+            padding-right: 260px;
         }
 
         .schedule-content {
@@ -136,7 +133,6 @@
             background-color: #f9f9f9;
         }
 
-        /* Footer Styles */
         footer {
             text-align: center;
             padding: 15px;
@@ -149,7 +145,6 @@
             font-size: 14px;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -166,7 +161,6 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="header-nav">
             <div>
@@ -176,12 +170,10 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main>
         <div class="schedule-content">
             <h2>Thời Khóa Biểu - Môn học</h2>
 
-            <!-- Schedule Table -->
             <table class="schedule-table">
                 <thead>
                     <tr>
@@ -221,7 +213,6 @@
         </div>
     </main>
 
-    <!-- Sidebar -->
     <div class="sidebar">
         <h2>Tính Năng</h2>
         <ul>
@@ -237,17 +228,14 @@
         </ul>
     </div>
 
-    <!-- Footer -->
     <footer>
         <p>&copy; 2024 Quản Lý Sinh Viên. Tất cả quyền được bảo vệ.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <script>
-        // Initialize AOS animation library
         AOS.init();
 
-        // JavaScript function to navigate to other pages
         function navigateTo(page) {
             window.location.href = page;
         }
