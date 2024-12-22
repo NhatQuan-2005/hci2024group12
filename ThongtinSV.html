@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin sinh viên</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9fafb;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Logo và tiêu đề */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+        }
+
+        .header img {
+            height: 80px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin: 0;
+        }
+
+        /* Bố cục chữ Z */
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .col-md-3 {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .col-md-9 {
+            flex: 3;
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        h2, h3 {
+            color: #00d1b2;
+        }
+
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-export {
+            background-color: #28a745; /* Màu xanh lá cho Export */
+            color: white;
+        }
+
+        .btn-import {
+            background-color: #dc3545; /* Màu đỏ cho Import */
+            color: white;
+        }
+
+
+        .btn-export {
+            background-color: #28a745; /* Màu xanh lá cho Export */
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table-primary {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .text-muted {
+            color: #28a745;
+        }
+
+        /* Nút Export và Import */
+        .action-buttons {
+            position: absolute;
+            bottom: -50px;
+            right: 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-buttons button {
+            width: auto;
+            padding: 8px 15px;
+        }
+
+        .btn-them {
+    background-color: #28a745; /* Màu xanh dương */
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-them:hover {
+    background-color: #0056b3; /* Màu xanh dương đậm hơn khi hover */
+}
+
+    </style>
+</head>
+<body>
+    <!-- Header với logo -->
+    <div class="header">
+        <img src="c:\Users\Hieu\OneDrive\รูปภาพ\Saved Pictures\logoNLU.png" alt="Logo">
+        <h1>Thông tin sinh viên</h1>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <!-- Cột chức năng -->
+            <div class="col-md-3">
+                <h3>Nhập thông tin</h3>
+                <input type="text" id="studentCode" placeholder="Mã số SV">
+                <input type="text" id="studentName" placeholder="Tên sinh viên">
+                <input type="date" id="studentDOB">
+                <input type="text" id="studentClass" placeholder="Lớp">
+                <input type="text" id="studentFaculty" placeholder="Khoa">
+                <!-- <button onclick="addStudent()">Thêm sinh viên</button> -->
+                <button class="btn-them" onclick="addStudent()">Thêm sinh viên</button>
+
+            </div>
+
+            <!-- Cột nội dung chính -->
+            <div class="col-md-9">
+                <h2 class="text-center">Danh sách sinh viên</h2>
+                <table class="table table-bordered table-hover">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>STT</th>
+                            <th>Mã sinh viên</th>
+                            <th>Tên sinh viên</th>
+                            <th>Ngày sinh</th>
+                            <th>Lớp</th>
+                            <th>Khoa</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTable">
+                        <!-- Dữ liệu sẽ hiển thị tại đây -->
+                    </tbody>
+                </table>
+
+                <!-- Nút Export và Import -->
+                <div class="action-buttons">
+                    <button class="btn-export" onclick="exportExcel()">Export Excel</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importExcel(event)">
+                    <button class="btn-import" onclick="document.getElementById('importFile').click()">Import Excel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let students = []; // Danh sách sinh viên
+
+        function renderTable() {
+            const tableBody = document.getElementById('studentTable');
+            tableBody.innerHTML = '';
+            if (students.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-muted">Chưa có dữ liệu</td></tr>`;
+            } else {
+                students.forEach((student, index) => {
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${student.code}</td>
+                            <td>${student.name}</td>
+                            <td>${student.dob}</td>
+                            <td>${student.class}</td>
+                            <td>${student.faculty}</td>
+                            <td>
+                                <button class="btn btn-info btn-sm" onclick="editStudent(${student.id})">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteStudent(${student.id})">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        function addStudent() {
+            const code = document.getElementById('studentCode').value.trim();
+            const name = document.getElementById('studentName').value.trim();
+            const dob = document.getElementById('studentDOB').value;
+            const studentClass = document.getElementById('studentClass').value.trim();
+            const faculty = document.getElementById('studentFaculty').value.trim();
+
+            if (!code || !name || !dob || !studentClass || !faculty) {
+                alert("Vui lòng nhập đầy đủ thông tin!");
+                return;
+            }
+
+            students.push({ id: students.length + 1, code, name, dob, class: studentClass, faculty });
+            document.getElementById('studentCode').value = '';
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentDOB').value = '';
+            document.getElementById('studentClass').value = '';
+            document.getElementById('studentFaculty').value = '';
+            renderTable();
+        }
+
+        function deleteStudent(id) {
+            students = students.filter(student => student.id !== id);
+            renderTable();
+        }
+
+        function editStudent(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                const newName = prompt("Nhập tên mới:", student.name);
+                if (newName) student.name = newName;
+                renderTable();
+            }
+        }
+
+        function exportExcel() {
+            if (students.length === 0) {
+                alert("Không có dữ liệu để xuất!");
+                return;
+            }
+            const dataStr = JSON.stringify(students, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'students.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importExcel(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if (Array.isArray(data)) {
+                            students = students.concat(data.map((item, idx) => ({
+                                id: students.length + idx + 1,
+                                ...item
+                            })));
+                            renderTable();
+                        } else {
+                            alert("Dữ liệu không hợp lệ!");
+                        }
+                    } catch {
+                        alert("Lỗi khi đọc file!");
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", renderTable);
+    </script>
+</body>
+</html>

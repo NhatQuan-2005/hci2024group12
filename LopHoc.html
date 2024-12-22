@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lớp Học</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef2f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #343a40;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filters select, .filters button {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: #f8f9fa;
+            transition: all 0.2s ease;
+        }
+
+        .filters select:hover, .filters button:hover {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .filters button.search {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .filters button.search:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .filters button.reset {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .filters button.reset:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f2f2f2;
+        }
+
+        td, th {
+            padding: 12px;
+            text-align: center;
+        }
+
+        td .actions button {
+            margin: 0 5px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        td .actions button.edit {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        td .actions button.edit:hover {
+            background-color: #e0a800;
+            transform: scale(1.1);
+        }
+
+        td .actions button.delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        td .actions button.delete:hover {
+            background-color: #c82333;
+            transform: scale(1.1);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .modal button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal button:hover {
+            background-color: #218838;
+        }
+
+        .modal button.cancel {
+            background-color: #dc3545;
+        }
+
+        .modal button.cancel:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Lớp Học</h1>
+        </div>
+
+        <div class="filters">
+            <select id="faculty">
+                <option value="">Tất cả Khoa</option>
+                <option value="Công Nghệ Thông Tin">Công Nghệ Thông Tin</option>
+            </select>
+            <select id="major">
+                <option value="">Chọn chuyên ngành</option>
+                <option value="Phát triển phần mềm">Phát triển phần mềm</option>
+                <option value="Công nghệ thông tin">Công nghệ thông tin</option>
+                <option value="Kỹ thuật máy tính">Kỹ thuật máy tính</option>
+                <option value="Hệ thông quản lý thông tin">Hệ thông quản lý thông tin</option>
+                <option value="Robot và trí tuệ nhân tạo">Robot và trí tuệ nhân tạo</option>
+                <option value="Khoa học máy tính​">Khoa học máy tính​</option>
+                <option value="Truyền thông dữ liệu và mạng máy tính ​">Truyền thông dữ liệu và mạng máy tính </option>
+
+            </select>
+            <select id="year">
+                <option value="">Tất cả niên khóa</option>
+                <option value="2022-2026">2022-2026</option>
+                <option value="2023-2027">2023-2027</option>
+            </select>
+            <button class="search" onclick="searchData()">Tìm kiếm</button>
+            <button class="reset" onclick="resetFilters()">Làm mới</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tên lớp</th>
+                    <th>Mã lớp</th>
+                    <th>Khoa</th>
+                    <th>Chuyên ngành</th>
+                    <th>Niên khóa</th>
+                    <th>Thông tin</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr>
+                    <td>Công nghệ thông tin A</td>
+                    <td>DH23DTA</td>
+                    <td>Công Nghệ Thông Tin</td>
+                    <td>Công nghệ thông tin</td>
+                    <td>2023-2027</td>
+                    <td>
+                        <ul>
+                            <li>Sĩ số: 30</li>
+                            <li>Hệ đào tạo: Đại học chính quy</li>
+                            <li>Niên khóa: 2023-2027</li>
+                        </ul>
+                    </td>
+                    
+                    <td class="actions">
+                        <button class="edit" onclick="editRow(this)">Sửa</button>
+                        <button class="delete" onclick="deleteRow(this)">Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Công nghệ thông tin B</td>
+                    <td>DH23DTB</td>
+                    <td>Công Nghệ Thông Tin</td>
+                    <td>Phát triển phần mềm</td>
+                    <td>2022-2026</td>
+                    <td>
+                        <ul>
+                            <li>Sĩ số: 35</li>
+                            <li>Hệ đào tạo: Đại học chính quy</li>
+                            <li>Niên khóa: 2022-2026</li>
+                        </ul>
+                    </td>
+                    <td class="actions">
+                        <button class="edit" onclick="editRow(this)">Sửa</button>
+                        <button class="delete" onclick="deleteRow(this)">Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Công nghệ thông tin B</td>
+                    <td>DH23DTB</td>
+                    <td>Công Nghệ Thông Tin</td>
+                    <td>Kỹ thuật máy tính</td>
+                    <td>2023-2027</td>
+                    <td>
+                        <ul>
+                            <li>Sĩ số: 55</li>
+                            <li>Hệ đào tạo: Đại học chính quy</li>
+                            <li>Niên khóa: 2023-2027</li>
+                        </ul>
+                    </td>
+                    <td class="actions">
+                        <button class="edit" onclick="editRow(this)">Sửa</button>
+                        <button class="delete" onclick="deleteRow(this)">Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Công nghệ thông tin B</td>
+                    <td>DH23DTB</td>
+                    <td>Công Nghệ Thông Tin</td>
+                    <td>Hệ thống quản lý thông tin</td>
+                    <td>2022-2026</td>
+                    <td>
+                        <ul>
+                            <li>Sĩ số: 70</li>
+                            <li>Hệ đào tạo: Đại học chính quy</li>
+                            <li>Niên khóa: 2022-2026</li>
+                        </ul>
+                    </td>
+                    <td class="actions">
+                        <button class="edit" onclick="editRow(this)">Sửa</button>
+                        <button class="delete" onclick="deleteRow(this)">Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Công nghệ thông tin B</td>
+                    <td>DH23DTB</td>
+                    <td>Công Nghệ Thông Tin</td>
+                    <td>Robot và trí tuệ nhân tạo</td>
+                    <td>2022-2026</td>
+                    <td>
+                        <ul>
+                            <li>Sĩ số: 40</li>
+                            <li>Hệ đào tạo: Đại học chính quy</li>
+                            <li>Niên khóa: 2022-2026</li>
+                        </ul>
+                    </td>
+                    <td class="actions">
+                        <button class="edit" onclick="editRow(this)">Sửa</button>
+                        <button class="delete" onclick="deleteRow(this)">Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Công nghệ thông tin B</td>
+                    <td>DH23DTB</td>
+                    <td>Công Nghệ Thông Tin</td>
+                    <td>Khoa học máy tính​</td>
+                    <td>2022-2026</td>
+                    <td>
+                        <ul>
+                            <li>Sĩ số: 50</li>
+                            <li>Hệ đào tạo: Đại học chính quy</li>
+                            <li>Niên khóa: 2022-2026</li>
+                        </ul>
+                    </td>
+                    <td class="actions">
+                        <button class="edit" onclick="editRow(this)">Sửa</button>
+                        <button class="delete" onclick="deleteRow(this)">Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Công nghệ thông tin B</td>
+                    <td>DH23DTB</td>
+                    <td>Công Nghệ Thông Tin</td>
+                    <td> Truyền thông dữ liệu và mạng máy tính ​</td>
+                    <td>2022-2026</td>
+                    <td>
+                        <ul>
+                            <li>Sĩ số: 80</li>
+                            <li>Hệ đào tạo: Đại học chính quy</li>
+                            <li>Niên khóa: 2022-2026</li>
+                        </ul>
+                    </td>
+                    <td class="actions">
+                        <button class="edit" onclick="editRow(this)">Sửa</button>
+                        <button class="delete" onclick="deleteRow(this)">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal for Editing -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h2>Sửa thông tin lớp học</h2>
+            <label for="editClassName">Tên lớp:</label>
+            <input type="text" id="editClassName" />
+            <label for="editClassCode">Mã lớp:</label>
+            <input type="text" id="editClassCode" />
+            <label for="editFaculty">Khoa:</label>
+            <input type="text" id="editFaculty" />
+            <label for="editMajor">Chuyên ngành:</label>
+            <input type="text" id="editMajor" />
+            <label for="editYear">Niên khóa:</label>
+            <input type="text" id="editYear" />
+            <button onclick="saveChanges()">Lưu</button>
+            <button class="cancel" onclick="closeModal()">Hủy</button>
+        </div>
+    </div>
+
+    <script>
+        let currentRow;
+
+        function searchData() {
+            const faculty = document.getElementById('faculty').value;
+            const major = document.getElementById('major').value;
+            const year = document.getElementById('year').value;
+
+            const rows = document.querySelectorAll('#tableBody tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const rowFaculty = cells[2].textContent.trim();
+                const rowMajor = cells[3].textContent.trim();
+                const rowYear = cells[4].textContent.trim();
+
+                const isMatch = 
+                    (!faculty || rowFaculty === faculty) &&
+                    (!major || rowMajor === major) &&
+                    (!year || rowYear === year);
+
+                row.style.display = isMatch ? '' : 'none';
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('faculty').value = '';
+            document.getElementById('major').value = '';
+            document.getElementById('year').value = '';
+
+            const rows = document.querySelectorAll('#tableBody tr');
+            rows.forEach(row => {
+                row.style.display = '';
+            });
+        }
+
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
+
+        function editRow(button) {
+            currentRow = button.closest('tr');
+            const cells = currentRow.querySelectorAll('td');
+            document.getElementById('editClassName').value = cells[0].textContent.trim();
+            document.getElementById('editClassCode').value = cells[1].textContent.trim();
+            document.getElementById('editFaculty').value = cells[2].textContent.trim();
+            document.getElementById('editMajor').value = cells[3].textContent.trim();
+            document.getElementById('editYear').value = cells[4].textContent.trim();
+
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function saveChanges() {
+            const className = document.getElementById('editClassName').value;
+            const classCode = document.getElementById('editClassCode').value;
+            const faculty = document.getElementById('editFaculty').value;
+            const major = document.getElementById('editMajor').value;
+            const year = document.getElementById('editYear').value;
+
+            const cells = currentRow.querySelectorAll('td');
+            cells[0].textContent = className;
+            cells[1].textContent = classCode;
+            cells[2].textContent = faculty;
+            cells[3].textContent = major;
+            cells[4].textContent = year;
+
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
