@@ -1,78 +1,58 @@
+// JavaScript cho xử lý đăng nhập, đăng ký và quên mật khẩu
+
+// Lấy các tham chiếu đến các trường biểu mẫu và nút
 const signUpButton = document.getElementById("signUp");
 const signInButton = document.getElementById("signIn");
 const container = document.getElementById("container");
 
-// Hiệu ứng chuyển đổi form
-signUpButton.addEventListener('click', () => {
-  container.classList.add('right-panel-active');
-});
-signInButton.addEventListener('click', () => {
-  container.classList.remove('right-panel-active');
+// Lắng nghe sự kiện để thêm lớp right-panel-active
+signUpButton.addEventListener("click", () => {
+  container.classList.add("right-panel-active");
 });
 
-// Hàm kiểm tra email hợp lệ
-function validateEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
+signInButton.addEventListener("click", () => {
+  container.classList.remove("right-panel-active");
+});
 
-// Xử lý Sign Up
+// Xử lý đăng ký (Sign Up)
 document.getElementById("signUpForm").addEventListener("submit", (event) => {
-  event.preventDefault(); // Ngăn tải lại trang
+  event.preventDefault();
 
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("signUpEmail").value.trim();
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("signUpEmail").value;
   const password = document.getElementById("signUpPassword").value;
 
-  // Kiểm tra dữ liệu đầu vào
-  if (!validateEmail(email)) {
-    alert("Please enter a valid email address.");
+  if (!name || !email || !password) {
+    alert("Please fill in all fields.");
     return;
   }
 
-  if (password.length < 6) {
-    alert("Password must be at least 6 characters.");
-    return;
-  }
-
-  // Lưu dữ liệu vào localStorage
+  // Lưu thông tin người dùng vào localStorage
   const user = { name, email, password };
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  if (users.some((u) => u.email === email)) {
-    alert("This email is already registered.");
-    return;
-  }
+  localStorage.setItem("user", JSON.stringify(user));
 
-  users.push(user);
-  localStorage.setItem("users", JSON.stringify(users));
-
-  // Hiển thị thông báo
-  alert("Sign Up Successful! Please log in.");
-  window.location.href = "login.html"; // Điều hướng đến trang đăng nhập
+  alert("Sign-up successful!");
 });
 
-// Bỏ kiểm tra, tự động chuyển trang khi Sign In
+// Xử lý đăng nhập (Sign In)
 document.getElementById("signInForm").addEventListener("submit", (event) => {
   event.preventDefault();
 
-  // Điều hướng trực tiếp đến trang student-management
-  window.location.href = "student-management.html";
-});
+  const email = document.getElementById("signInEmail").value;
+  const password = document.getElementById("signInPassword").value;
 
-// Xử lý đăng nhập bằng mạng xã hội
-function socialLogin(platform) {
-  alert(`Redirecting to ${platform} login page...`);
-  switch (platform) {
-    case "Facebook":
-      window.open("https://facebook.com", "_blank");
-      break;
-    case "Google":
-      window.open("https://accounts.google.com", "_blank");
-      break;
-    case "LinkedIn":
-      window.open("https://linkedin.com", "_blank");
-      break;
-    default:
-      console.error("Invalid platform");
+  // Lấy thông tin người dùng đã lưu trong localStorage
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+
+  if (
+    storedUser &&
+    storedUser.email === email &&
+    storedUser.password === password
+  ) {
+    // Đăng nhập thành công, chuyển hướng đến trang home.html
+
+    window.location.href = "student-management.html"; // Chuyển hướng đến trang home.html
+  } else {
+    alert("Incorrect email or password.");
   }
-}
+});
